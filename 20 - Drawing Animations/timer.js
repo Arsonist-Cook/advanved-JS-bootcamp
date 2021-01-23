@@ -4,6 +4,8 @@ class Timer {
 		this.startButton = startButton;
 		this.pauseButton = pauseButton;
 
+		this.totalTimer = 0;
+
 		// this.timeLeft = 30;
 
 		if (callbacks) {
@@ -16,34 +18,27 @@ class Timer {
 		this.pauseButton.addEventListener('click', this.pause);
 	}
 	start = (evt) => {
-		// if (!this.intervalId) {
-		// 	this.tick();
-		// 	this.intervalId = setInterval(this.tick, 1000);
-		// }
 		if (this.onStart) {
-			this.onStart();
+			this.totalTimer = this.timeRemaining;
+			this.onStart(this.totalTimer);
 		}
-		this.tick();
-		this.intervalId = setInterval(this.tick, 1000);
+		if (!this.intervalId) {
+			this.tick();
+			this.intervalId = setInterval(this.tick, 50);
+		}
 	};
 	tick = () => {
-		// this.timeLeft -= 1;
-		// if (this.timeLeft === 0) {
-		//     this.pause();
-		//     this.timeLeft = 30;
-		// }
-		// this.durationInput.value = this.timeLeft;
-		// console.log('Tick');
 		if (this.timeRemaining <= 0) {
 			if (this.onComplete) {
 				this.onComplete();
 			}
 			this.pause();
 		} else {
+			this.timeRemaining = this.timeRemaining - 0.05;
 			if (this.onTick) {
-				this.onTick();
+				let percentage = this.timeRemaining / this.totalTimer;
+				this.onTick(percentage);
 			}
-			this.timeRemaining = this.timeRemaining - 1;
 		}
 	};
 	pause = () => {
@@ -54,6 +49,6 @@ class Timer {
 		return parseFloat(this.durationInput.value);
 	}
 	set timeRemaining(time) {
-		this.durationInput.value = time;
+		this.durationInput.value = time.toFixed(2);
 	}
 }
