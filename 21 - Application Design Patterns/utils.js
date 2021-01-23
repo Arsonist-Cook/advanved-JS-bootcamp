@@ -30,3 +30,19 @@ const searchMovie = async (search) => {
     }
     return response.data.Search;
 };
+
+const getMovie = async (id) => {
+	const url = 'http://www.omdbapi.com/';
+	const params = {
+		apikey: 'd75c8e1d',
+		i: id
+    };
+    
+	const response = await axios.get(url, { params });
+    
+    console.log(response);
+    if(response.data.Error){
+        return [];
+    }
+    return response.data;
+};
