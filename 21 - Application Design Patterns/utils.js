@@ -15,6 +15,8 @@ const debounce = (fn, delay) => {
 	};
 };
 
+//função com acoplamento por gerar elementos da UI
+//Função com repetição de elementos de configuração
 const searchMovie = async (search) => {
 	const url = 'http://www.omdbapi.com/';
 	const params = {
@@ -30,7 +32,7 @@ const searchMovie = async (search) => {
     }
     return response.data.Search;
 };
-
+//Função com repetição de elementos de configuração e código
 const getMovie = async (id) => {
 	const url = 'http://www.omdbapi.com/';
 	const params = {
@@ -40,7 +42,7 @@ const getMovie = async (id) => {
     
 	const response = await axios.get(url, { params });
     
-    console.log(response);
+    // console.log(response);
     if(response.data.Error){
         return [];
     }
