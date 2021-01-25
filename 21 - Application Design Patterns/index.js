@@ -53,13 +53,10 @@ function createSumary(movie) {
 	return div;
 }
 
-
 //Função com acoplamento de UI
 
-const sumary = document.querySelector('#sumary');
-sumary.addEventListener("DOMNodeInserted",()=>{console.log('Sumary changed')});
-
 function createAutoComplete(anchor){
+
 	const onClick = async (event) => {
 		const id = event.target.dataset.mid;
 		console.log(id);
@@ -67,16 +64,32 @@ function createAutoComplete(anchor){
 		console.log(movie);
 		inputElem.value = movie.Title;
 		dropdown.classList.remove('is-active');
-		
-			sumary.appendChild(createSumary(movie));
-		
+		// if (sumary.chi)
+		//sumary.innerHTML = '';//limpa o sumário
+		const panel = createSumary(movie)
+		if(sumary.lastChild){
+			sumary.replaceChild(panel,sumary.lastChild); //ponto de acoplamento
+		}else{
+			sumary.appendChild(panel);
+		}
 	};
+	/**
+	 * 
+	 * @todo desacoplar a criação do conteúdo para dinamizar a troca de conteúdo 
+	 */
 	const onInput = async (event) => {
 		const movies = await searchMovie(event.target.value);
-		dropdownContent.innerHTML = '';
+		// dropdownContent.innerHTML = '';
 		if (!movies.length) {
 			dropdown.classList.remove('is-active');
 			return;
+		}
+		const dropdownContent = document.createElement('div');
+		dropdownContent.classList.add('dropdown-content', 'results');
+		if(dropdownMenu.hasChildNodes()){
+			dropdownMenu.replaceChild(dropdownContent, dropdownMenu.lastChild);
+		}else{
+			dropdownMenu.appendChild(dropdownContent);
 		}
 		dropdown.classList.add('is-active');
 	
@@ -101,11 +114,12 @@ function createAutoComplete(anchor){
 			dropdownContent.appendChild(option);
 		}
 	};
-	const checkResults = (event) => {
-		if (dropdownContent.children.length && !dropdown.classList.contains('is-active')) {
-			dropdown.classList.add('is-active');
-		}
-	};
+	// const checkResults = (event) => {
+	// 	if(dropdownMenu.hasChildNodes()){
+	// 	if (dropdownMenu.lastChild.hasChildNodes() && !dropdown.classList.contains('is-active')) {
+	// 		dropdown.classList.add('is-active');
+	// 	}}
+	// };
 //Cria o label do formulário de pesquisa
 const labelId = uuidv4();
 const bold = document.createElement('b');
@@ -122,25 +136,29 @@ inputElem.setAttribute('type', 'text');
 inputElem.setAttribute('id', labelId);
 inputElem.setAttribute('name', labelId);
 inputElem.addEventListener('input', debounce(onInput, 1000)); //Acoplamento por função de callback
-inputElem.addEventListener('focus', checkResults); //Acoplamento por função callback
+// inputElem.addEventListener('focus', checkResults); //Acoplamento por função callback
 
 //cria e configura o menu dropdown
-const dropdownContent = document.createElement('div');
-dropdownContent.classList.add('dropdown-content', 'results');
+// const dropdownContent = document.createElement('div');
+// dropdownContent.classList.add('dropdown-content', 'results');
 
 const dropdownMenu = document.createElement('div');
 dropdownMenu.classList.add('dropdown-menu');
-dropdownMenu.appendChild(dropdownContent);
+// dropdownMenu.appendChild(dropdownContent);
 
 const dropdown = document.createElement('div');
 dropdown.classList.add('dropdown');
 dropdown.appendChild(dropdownMenu);
 
+const sumary = document.createElement('div');
+	sumary.addEventListener("DOMNodeInserted",()=>{console.log('Sumary changed')});
 //adiciona os elementos criados ao documento
 const autocomplete = document.querySelector(anchor); //Acoplamento por elemento do documento
 autocomplete.appendChild(label);
 autocomplete.appendChild(inputElem);
 autocomplete.appendChild(dropdown);
+autocomplete.appendChild(sumary);
+
 
 document.addEventListener('click', (event) => {
 	if (!autocomplete.contains(event.target)) {
@@ -149,7 +167,6 @@ document.addEventListener('click', (event) => {
 });
 return autocomplete;
 }
-createAutoComplete('.autocomplete');
-createAutoComplete('.autocomplete1');
+createAutoComplete('#autocomplete');
+createAutoComplete('#autocomplete1');
 //event listener para fechar o menu
-
