@@ -48,6 +48,7 @@ class UserService {
 	delete(_id) {
 		this.users = this.users.filter(({ id }) => id !== _id);
 		//gera um novo array com todos os elementos em que o id é diferente do procurado
+		this._commit(this.users);
 	}
 	toggle(_id) {
 		this.users = this.users.map(
