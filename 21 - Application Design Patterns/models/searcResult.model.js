@@ -36,6 +36,7 @@ const movieDetailConfig = {
 
 class ConfigurableFields {
 	constructor(origin, { fields }) {
+
 		// const fields = config.fields;
 		if (fields) {
 			for (const key in fields) {
@@ -93,6 +94,7 @@ class Statistics extends ConfigurableFields {
 	_comparison(field, compared) {
 		let result = 0; //mismatch Value
 		const dataset = this._dataset;
+
 		if (dataset[field] > compared[field]) {
 			result = 1; //local wins
 		} else if (dataset[field] < compared[field]) {
@@ -116,7 +118,6 @@ class Statistics extends ConfigurableFields {
 class ResultDetail extends ConfigurableFields {
 	constructor(result, { fields, statistics }) {
 		super(result, { fields });
-
 		if (statistics) {
 			this.statistics = new Statistics(result, statistics);
 		}
@@ -124,6 +125,7 @@ class ResultDetail extends ConfigurableFields {
 }
 
 //Base Code Experimentation
+
 const movie = {
 	Actors: 'Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth',
 	Awards: 'Nominated for 1 Oscar. Another 38 wins & 79 nominations.',
